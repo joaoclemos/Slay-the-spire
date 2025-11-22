@@ -2,7 +2,7 @@
 TARGET := game.out
 
 # ADICIONE SEUS NOVOS ARQUIVOS .C AQUI
-SRC    := main.c utils.c renderer.c setup.c
+SRC    := main.c utils.c renderer.c setup.c logic.c
 
 # --- Configuração do Allegro (copiado do devkit) ---
 PKGCONF := pkg-config

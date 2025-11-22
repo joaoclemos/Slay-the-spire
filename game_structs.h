@@ -71,5 +71,17 @@ typedef struct {
     int acao_ia_atual;    // Índice de qual ação ele fará no ciclo
 } Enemy;
 
+// --- MÁQUINA DE ESTADOS DO JOGO ---
+// Colado do main.c
+typedef enum {
+    GAME_STATE_START,
+    GAME_STATE_NEW_COMBAT,
+    GAME_STATE_PLAYER_TURN,
+    GAME_STATE_ENEMY_TURN,
+    GAME_STATE_VICTORY,
+    GAME_STATE_GAME_OVER
+} GameState;
+
 
 #endif // Fim da guarda de cabeçalho
+
