@@ -1,20 +1,18 @@
 #ifndef LOGIC_H
 #define LOGIC_H
-
 #include "game_structs.h"
 
-// Move 'n' cartas da pilha de compras para a mão.
-// Se acabar a pilha de compras, recicla o descarte.
+// Compra 'n' cartas da pilha
 void draw_cards(Player* player, int n);
 
-// Prepara o jogador para um novo turno (reseta energia, compra mão nova)
+// Começa o turno do jogador (reseta energia, etc)
 void start_player_turn(Player* player);
 
-// Joga uma carta da mão (aplica efeito e descarta)
-// Retorna 1 se deu certo, 0 se falhou (ex: sem energia)
+// O Jogador joga uma carta contra um alvo
+// Retorna 1 se funcionou, 0 se falhou (sem energia)
 int play_card(Player* player, int card_index, Enemy* target);
 
-// Executa as ações de todos os inimigos vivos e passa o turno
+// Faz os inimigos agirem (atacarem ou defenderem)
 void execute_enemy_turn(Player* player, Enemy inimigos[]);
 
 #endif

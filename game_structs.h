@@ -1,87 +1,80 @@
-// Isso garante que este arquivo só seja "lido" uma vez pelo compilador
 #ifndef GAME_STRUCTS_H
 #define GAME_STRUCTS_H
 
-// --- 📦 ESTRUTURAS DAS CARTAS ---
+// --- TIPOS DE COISAS ---
 
-// Enum para os tipos de carta
+// Tipo da Carta: É de bater, defender ou especial?
 typedef enum {
     ATAQUE,
     DEFESA,
     ESPECIAL
 } TipoCarta;
 
-// A struct de uma única carta
-typedef struct {
-    TipoCarta tipo;
-    int custo_energia;
-    int efeito_valor; // Dano do ataque, escudo da defesa, etc.
-} Card;
-
-// Struct para um grupo de cartas (baralho, mão, descarte, etc.)
-typedef struct {
-    Card cartas[50]; // Um limite de 50 cartas por pilha (pode ajustar)
-    int num_cartas;
-} PilhaCartas;
-
-
-// --- 🛠️ ESTRUTURAS DAS CRIATURAS ---
-
-// Uma struct base que serve para o jogador E para os inimigos
-typedef struct {
-    int hp_atual;
-    int hp_max;
-    int escudo;
-} Creature;
-
-// --- ESTRUTURA DO JOGADOR ---
-typedef struct {
-    Creature stats;      // Os stats base (HP, escudo)
-    int energia_atual;
-    int energia_max;
-
-    PilhaCartas baralho_completo; // A lista mestre de 20 cartas
-    PilhaCartas pilha_compra;
-    PilhaCartas mao;
-    PilhaCartas pilha_descarte;
-} Player;
-
-
-// --- ESTRUTURA DOS INIMIGOS ---
-
-// Enum para os tipos de inimigo
+// Tipo do Inimigo: É fraco ou forte (Boss)?
 typedef enum {
     FRACO,
     FORTE
 } TipoInimigo;
 
-// Uma ação da IA do inimigo
-typedef struct {
-    TipoCarta tipo_acao; // Só pode ser ATAQUE ou DEFESA
-    int valor_efeito;
-} AI_Action;
-
-// A struct de um único inimigo
-typedef struct {
-    Creature stats;
-    TipoInimigo tipo;
-
-    AI_Action ia_ciclo[3]; // Inimigos têm de 1 a 3 ações
-    int num_acoes_ia;
-    int acao_ia_atual;    // Índice de qual ação ele fará no ciclo
-} Enemy;
-
-// --- MÁQUINA DE ESTADOS DO JOGO ---
-// Colado do main.c
+// Estados do Jogo: O que está acontecendo agora?
 typedef enum {
-    GAME_STATE_START,
-    GAME_STATE_NEW_COMBAT,
-    GAME_STATE_PLAYER_TURN,
-    GAME_STATE_ENEMY_TURN,
-    GAME_STATE_VICTORY,
-    GAME_STATE_GAME_OVER
+    GAME_STATE_START,       // Carregando o jogo
+    GAME_STATE_NEW_COMBAT,  // Preparando uma nova luta
+    GAME_STATE_PLAYER_TURN, // É a vez do jogador
+    GAME_STATE_ENEMY_TURN,  // É a vez do inimigo
+    GAME_STATE_VICTORY,     // Ganhou o jogo todo
+    GAME_STATE_GAME_OVER    // Perdeu o jogo
 } GameState;
 
 
-#endif // Fim da guarda de cabeçalho
+// --- ESTRUTURAS (DADOS) ---
 
+// 1. A CARTA
+typedef struct {
+    TipoCarta tipo;    // Qual o tipo (Ataque/Defesa)
+    int custo_energia; // Quanto custa para usar
+    int efeito_valor;  // Quanto de dano ou escudo ela dá
+} Card;
+
+// 2. UM MONTE DE CARTAS (Serve para o baralho, mão e descarte)
+typedef struct {
+    Card cartas[50]; // Guarda até 50 cartas
+    int num_cartas;  // Quantas cartas tem agora
+} PilhaCartas;
+
+// 3. UMA CRIATURA (Base para Jogador e Inimigos)
+typedef struct {
+    int hp_atual; // Vida agora
+    int hp_max;   // Vida máxima
+    int escudo;   // Escudo atual
+} Creature;
+
+// 4. O JOGADOR (Tem vida + cartas + energia)
+typedef struct {
+    Creature stats;      // Vida e Escudo
+    int energia_atual;   // Energia sobrando
+    int energia_max;     // Energia total
+
+    PilhaCartas baralho_completo; // Todas as cartas que possui
+    PilhaCartas pilha_compra;     // Cartas para comprar
+    PilhaCartas mao;              // Cartas na mão agora
+    PilhaCartas pilha_descarte;   // Cartas já usadas
+} Player;
+
+// 5. AÇÃO DA IA (O que o inimigo planeja fazer)
+typedef struct {
+    TipoCarta tipo_acao; // Vai atacar ou defender?
+    int valor_efeito;    // Com que força?
+} AI_Action;
+
+// 6. O INIMIGO (Tem vida + inteligência artificial)
+typedef struct {
+    Creature stats;      // Vida e Escudo
+    TipoInimigo tipo;    // Fraco ou Forte
+
+    AI_Action ia_ciclo[3]; // Lista de ações que ele repete (ex: Ataca -> Defende)
+    int num_acoes_ia;      // Quantas ações diferentes ele tem
+    int acao_ia_atual;     // Qual ação ele vai fazer agora
+} Enemy;
+
+#endif

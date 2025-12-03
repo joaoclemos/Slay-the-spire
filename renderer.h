@@ -1,9 +1,3 @@
-/*
- * renderer.h
- *
- * Modificado para incluir DOIS tipos de inimigo (Fraco e Forte).
- */
-
 #ifndef RENDERER_H
 #define RENDERER_H
 
@@ -13,25 +7,27 @@
 #include "constants.h"
 #include "game_structs.h"
 
+// Estrutura que guarda tudo necessário para desenhar
 typedef struct {
-    ALLEGRO_DISPLAY* display;
-    ALLEGRO_FONT* font;
+    ALLEGRO_DISPLAY* display; // A Janela
+    ALLEGRO_FONT* font;       // A Fonte do texto
     
-    // --- IMAGENS ---
+    // Imagens que vamos carregar do disco
     ALLEGRO_BITMAP* img_player;
-    ALLEGRO_BITMAP* img_enemy_weak;   // Inimigo Comum
-    ALLEGRO_BITMAP* img_enemy_strong; // Inimigo Forte (Boss)
-    ALLEGRO_BITMAP* img_card;       
-    ALLEGRO_BITMAP* img_background; 
+    ALLEGRO_BITMAP* img_enemy_weak;
+    ALLEGRO_BITMAP* img_enemy_strong;
+    ALLEGRO_BITMAP* img_card;
+    ALLEGRO_BITMAP* img_background;
 } Renderer;
 
+// Inicia a janela e carrega imagens
 void FillRenderer(Renderer* renderer);
+
+// Limpa a memória ao fechar
 void ClearRenderer(Renderer* renderer);
 
-void Render(Renderer* renderer,
-            GameState current_state,
-            Player player,
-            Enemy inimigos[],
+// Função PRINCIPAL que desenha tudo na tela a cada frame
+void Render(Renderer* renderer, GameState current_state, Player player, Enemy inimigos[], 
             int carta_sel, int inimigo_sel, int selecionando_alvo);
 
 #endif

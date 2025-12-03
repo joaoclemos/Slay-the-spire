@@ -1,35 +1,26 @@
-/*
- * setup.c
- *
- * Arquivo de implementação para as funções de setup.
- * CORRIGIDO: Garante que todo inimigo tenha pelo menos um ataque.
- */
-
 #include "setup.h"
-#include <stdlib.h> // rand(), NULL
-#include <time.h>   // time()
+#include <stdlib.h> // Para usar rand() (sorteio)
+#include <time.h>   
 
-/*
- * Função auxiliar para gerar um número aleatório dentro de um intervalo
- */
+// Função auxiliar: Sorteia um número entre min e max
 int random_int_in_range(int min, int max) {
     return (rand() % (max - min + 1)) + min;
 }
 
-/*
- * Implementação da função que cria uma carta aleatória.
- */
+// Cria uma carta sorteada
 Card create_random_card(TipoCarta tipo, int custo) {
     Card nova_carta;
     nova_carta.tipo = tipo;
     nova_carta.custo_energia = custo;
 
+    // Se for carta Especial, custo é 0
     if (tipo == ESPECIAL) {
         nova_carta.custo_energia = 0;
         nova_carta.efeito_valor = 0;
         return nova_carta;
     }
 
+    // Define a força da carta baseada no custo (Custo maior = Mais forte)
     switch (custo) {
         case 0: nova_carta.efeito_valor = random_int_in_range(1, 5); break;
         case 1: nova_carta.efeito_valor = random_int_in_range(5, 10); break;
@@ -39,60 +30,42 @@ Card create_random_card(TipoCarta tipo, int custo) {
     return nova_carta;
 }
 
-/*
- * Implementação da função que embaralha uma pilha.
- */
+// Mistura as cartas (Algoritmo padrão de embaralhamento)
 void shuffle_pilha(PilhaCartas *pilha) {
     for (int i = pilha->num_cartas - 1; i > 0; i--) {
-        int j = rand() % (i + 1);
+        int j = rand() % (i + 1); // Escolhe uma carta aleatória
+        
+        // Troca a carta atual com a aleatória
         Card temp = pilha->cartas[i];
         pilha->cartas[i] = pilha->cartas[j];
         pilha->cartas[j] = temp;
     }
 }
 
-/*
- * Monta o baralho inicial.
- */
+// Cria o baralho de 20 cartas
 PilhaCartas create_initial_deck() {
     PilhaCartas baralho;
     baralho.num_cartas = 0;
     int i = 0;
 
-    // --- 1. Ataques ---
-    baralho.cartas[i++] = create_random_card(ATAQUE, 0);
-    baralho.cartas[i++] = create_random_card(ATAQUE, 1);
-    baralho.cartas[i++] = create_random_card(ATAQUE, 1);
-    baralho.cartas[i++] = create_random_card(ATAQUE, 1);
-    baralho.cartas[i++] = create_random_card(ATAQUE, 2);
-    baralho.cartas[i++] = create_random_card(ATAQUE, 3);
-    for (int j = 0; j < 4; j++) {
-        baralho.cartas[i++] = create_random_card(ATAQUE, random_int_in_range(0, 3));
+    // Adiciona 10 Ataques
+    for(int k=0; k<10; k++) {
+        baralho.cartas[i++] = create_random_card(ATAQUE, random_int_in_range(0, 2));
     }
-
-    // --- 2. Defesas ---
-    baralho.cartas[i++] = create_random_card(DEFESA, 0);
-    baralho.cartas[i++] = create_random_card(DEFESA, 1);
-    baralho.cartas[i++] = create_random_card(DEFESA, 1);
-    baralho.cartas[i++] = create_random_card(DEFESA, 1);
-    baralho.cartas[i++] = create_random_card(DEFESA, 2);
-    baralho.cartas[i++] = create_random_card(DEFESA, 3);
-    for (int j = 0; j < 2; j++) {
+    // Adiciona 8 Defesas
+    for(int k=0; k<8; k++) {
         baralho.cartas[i++] = create_random_card(DEFESA, random_int_in_range(0, 2));
     }
-
-    // --- 3. Especiais ---
+    // Adiciona 2 Especiais
     baralho.cartas[i++] = create_random_card(ESPECIAL, 0);
     baralho.cartas[i++] = create_random_card(ESPECIAL, 0);
 
     baralho.num_cartas = 20;
-    shuffle_pilha(&baralho);
+    shuffle_pilha(&baralho); // Mistura tudo
     return baralho;
 }
 
-/*
- * Inicializa jogador.
- */
+// Cria o Jogador pronto para começar
 Player setup_player() {
     Player jogador;
     jogador.stats.hp_atual = 100;
@@ -100,76 +73,54 @@ Player setup_player() {
     jogador.stats.escudo = 0;
     jogador.energia_atual = 3;
     jogador.energia_max = 3;
+    
+    // Cria o baralho mas começa com as outras pilhas vazias
     jogador.baralho_completo = create_initial_deck();
     jogador.pilha_compra.num_cartas = 0;
     jogador.mao.num_cartas = 0;
     jogador.pilha_descarte.num_cartas = 0;
+    
     return jogador;
 }
 
-/*
- * Cria inimigo aleatório.
- */
+// Cria um Inimigo
 Enemy create_enemy() {
     Enemy inimigo;
+    // Sorteia se vai ser Forte (5% de chance) ou Fraco (95%)
     float chance = (float)rand() / RAND_MAX;
-    int tem_ataque = 0; // Flag para verificar se gerou ataque
+    int tem_ataque = 0;
 
     if (chance <= 0.05) {
-        // --- FORTE ---
+        // INIMIGO FORTE (BOSS)
         inimigo.tipo = FORTE;
         inimigo.stats.hp_max = random_int_in_range(40, 100);
-        inimigo.num_acoes_ia = random_int_in_range(2, 3);
-        
-        int custo1_usado = 0;
-        for (int i = 0; i < inimigo.num_acoes_ia; i++) {
-            int custo_acao;
-            if (custo1_usado == 0) {
-                custo_acao = random_int_in_range(1, 3);
-                if (custo_acao == 1) custo1_usado = 1;
-            } else {
-                custo_acao = random_int_in_range(2, 3);
-            }
-            
-            TipoCarta tipo_acao = (rand() % 2 == 0) ? ATAQUE : DEFESA;
-            Card acao_card = create_random_card(tipo_acao, custo_acao);
-            
-            inimigo.ia_ciclo[i].tipo_acao = acao_card.tipo;
-            inimigo.ia_ciclo[i].valor_efeito = acao_card.efeito_valor;
-            
-            if (tipo_acao == ATAQUE) tem_ataque = 1;
-        }
-
+        inimigo.num_acoes_ia = 3; // Tem 3 passos no ciclo
     } else {
-        // --- FRACO ---
+        // INIMIGO FRACO
         inimigo.tipo = FRACO;
         inimigo.stats.hp_max = random_int_in_range(10, 30);
-        inimigo.num_acoes_ia = random_int_in_range(1, 2);
-
-        for (int i = 0; i < inimigo.num_acoes_ia; i++) {
-            int custo_acao = random_int_in_range(0, 1);
-            TipoCarta tipo_acao = (rand() % 2 == 0) ? ATAQUE : DEFESA;
-            
-            Card acao_card = create_random_card(tipo_acao, custo_acao);
-            
-            inimigo.ia_ciclo[i].tipo_acao = acao_card.tipo;
-            inimigo.ia_ciclo[i].valor_efeito = acao_card.efeito_valor;
-            
-            if (tipo_acao == ATAQUE) tem_ataque = 1;
-        }
+        inimigo.num_acoes_ia = 2; // Tem 2 passos no ciclo
     }
 
-    // --- CORREÇÃO: GARANTE PELO MENOS 1 ATAQUE ---
+    // Define o que o inimigo vai fazer (Atacar ou Defender)
+    for (int i = 0; i < inimigo.num_acoes_ia; i++) {
+        TipoCarta tipo = (rand() % 2 == 0) ? ATAQUE : DEFESA;
+        Card acao = create_random_card(tipo, random_int_in_range(0, 2));
+        
+        inimigo.ia_ciclo[i].tipo_acao = acao.tipo;
+        inimigo.ia_ciclo[i].valor_efeito = acao.efeito_valor;
+        
+        if (tipo == ATAQUE) tem_ataque = 1;
+    }
+
+    // GARANTIA: Se o inimigo foi criado só com defesa, força o primeiro golpe a ser Ataque
     if (!tem_ataque) {
-        // Escolhe um passo aleatório do ciclo para virar ataque
-        int indice_para_trocar = rand() % inimigo.num_acoes_ia;
-        inimigo.ia_ciclo[indice_para_trocar].tipo_acao = ATAQUE;
-        // O valor do efeito não muda, pois ataque e defesa têm o mesmo range de valores
+        inimigo.ia_ciclo[0].tipo_acao = ATAQUE;
     }
 
     inimigo.stats.hp_atual = inimigo.stats.hp_max;
     inimigo.stats.escudo = 0;
-    inimigo.acao_ia_atual = 0;
+    inimigo.acao_ia_atual = 0; // Começa na primeira ação
 
     return inimigo;
 }
