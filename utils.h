@@ -2,9 +2,10 @@
 #define _UTILS_H_
 #include <stdlib.h>
 
-// Verifica inicialização
+// Função para verificar se o Allegro iniciou bem. Se falhar, fecha o programa.
 void must_init(_Bool test, const char* description);
-// Limpa teclas
+
+// Função para limpar o array que guarda quais teclas estão apertadas
 void ClearKeyboardKeys(unsigned char* keyboard_keys);
 
 #endif

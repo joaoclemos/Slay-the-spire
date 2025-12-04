@@ -11,7 +11,7 @@ typedef struct {
     ALLEGRO_DISPLAY* display;
     ALLEGRO_FONT* font;
     
-    // Imagens Gerais
+    // Imagens
     ALLEGRO_BITMAP* img_player;
     ALLEGRO_BITMAP* img_enemy_weak;   
     ALLEGRO_BITMAP* img_enemy_strong; 
@@ -19,13 +19,14 @@ typedef struct {
     ALLEGRO_BITMAP* img_background; 
     ALLEGRO_BITMAP* img_base; 
 
-    // Imagens Cartas
+    // Cartas
     ALLEGRO_BITMAP* img_verso;     
     ALLEGRO_BITMAP* img_ataque;    
     ALLEGRO_BITMAP* img_defesa;    
     ALLEGRO_BITMAP* img_especial;
-    
-    // Ícones Específicos
+    // Nota: removemos img_buff/debuff genéricos
+
+    // Ícones
     ALLEGRO_BITMAP* icon_forca;
     ALLEGRO_BITMAP* icon_vulneravel;
     ALLEGRO_BITMAP* icon_veneno;
