@@ -1,95 +1,92 @@
 # 🃏 Slay the Spire - Clone (PDS1)
 
-Trabalho Prático desenvolvido para a disciplina de **Programação e Desenvolvimento de Software 1 (PDS1)** da UFMG.
+Um jogo de cartas *roguelike* desenvolvido em **C** utilizando a biblioteca gráfica **Allegro 5** para a disciplina de Programação e Desenvolvimento de Software 1 (PDS1) da UFMG.
 
-Este projeto é uma implementação de um jogo de cartas *roguelike* inspirado em "Slay the Spire", desenvolvido inteiramente em **C** utilizando a biblioteca gráfica **Allegro 5**.
 
----
-
-## 📋 Sobre o Jogo
-
-O jogador controla um herói que deve enfrentar uma série de 10 combates consecutivos contra inimigos variados. O objetivo é gerenciar seu baralho, energia e vida para sobreviver até o final.
-
-### Funcionalidades Implementadas
-* **Sistema de Combate por Turnos:** Jogador e Inimigos alternam ações.
-* **Gerenciamento de Baralho:** Pilhas de Compra, Mão e Descarte (com reembaralhamento automático).
-* **Tipos de Cartas:** Ataque, Defesa e Especial (efeitos variados).
-* **Inteligência Artificial:** Inimigos com ciclos de comportamento (Ataque/Defesa) e níveis de dificuldade (Fraco/Forte).
-* **Interface Gráfica:** Renderização de sprites, barras de vida, energia e intenção dos inimigos.
-* **Visual Personalizado:** Suporte a carregamento de imagens `.png` para personagens e cartas.
 
 ---
 
-## 🎮 Como Jogar
+## 📋 Visão Geral do Jogo
 
-O objetivo é vencer **10 combates**. Se a vida do jogador chegar a 0, é **Game Over**.
+O projeto simula a fase de combate do jogo "Slay the Spire". O herói deve gerenciar seu baralho e energia para derrotar 10 inimigos em combates por turnos. A sobrevivência exige a gestão eficaz de recursos e a compreensão da **Intenção** dos inimigos.
 
-### Controles
+### ✨ Funcionalidades Principais
 
-| Tecla | Ação |
-| :--- | :--- |
-| **⬅️ / ➡️ Setas** | Navegar entre as cartas da mão |
-| **ENTER** | Jogar a carta selecionada / Confirmar alvo |
-| **ESC** | Cancelar seleção de alvo / **Encerrar Turno** |
-| **Q** | Sair do jogo |
-
-### Regras Básicas
-1.  Você começa o turno com **3 de Energia** e **5 Cartas**.
-2.  Cartas de **Ataque** causam dano (reduzem escudo primeiro, depois vida).
-3.  Cartas de **Defesa** dão escudo (o escudo zera no início do seu próximo turno).
-4.  Os inimigos mostram a **Intenção** (o que vão fazer no turno deles) acima da cabeça.
-5.  Ao vencer um combate, sua vida **não** é regenerada totalmente para o próximo (gerenciamento de recursos é crucial!).
+* **Combate por Turnos:** Jogador e Inimigos alternam ações.
+* **Gerenciamento de Deck:** Implementação das pilhas de Compra, Mão e Descarte com reembaralhamento automático.
+* **Tipos de Cartas:** Suporte para Ataque, Defesa, Especial (Troca de mão) e cartas de Status (Buffs/Debuffs).
+* **Inteligência Artificial (IA):** Inimigos com ciclos de comportamento fixo e exibição da próxima ação (Intenção).
+* **Níveis de Inimigo:** Diferenciação entre inimigos Fracos e Fortes (Boss).
+* **Interface Gráfica:** Uso de sprites e barras de vida renderizadas pelo Allegro 5.
 
 ---
 
-## 🛠️ Instalação e Compilação
+## 🛠 Tech Stack e Estrutura
+
+### Tecnologias
+| Categoria | Tecnologia | Função |
+| :--- | :--- | :--- |
+| **Linguagem Principal** | C | Lógica e motor do jogo |
+| **Gráficos/Input** | Allegro 5 | Renderização, Janelas e Leitura de Teclado |
+| **Compilador** | GCC / MinGW | Necessário para compilação |
+| **Build System** | Makefile | Automação do processo de compilação |
+
+### Estrutura do Projeto
+
+O código é modularizado para separar a lógica das regras (`logic.c`) do desenho (`renderer.c`).
+
+* **`main.c`**: Contém o **Loop Principal** e a **Máquina de Estados** (Game Flow).
+* **`logic.c`**: Regras de jogo, cálculo de dano e aplicação de efeitos.
+* **`renderer.c`**: Desenho de todos os elementos visuais (cartas, sprites, barras de vida).
+* **`setup.c`**: Funções de inicialização e criação aleatória de baralhos e inimigos.
+* **`game_structs.h`**: Definições das estruturas de dados (`Player`, `Card`, `Enemy`).
+
+---
+
+## 🚀 Instalação e Execução
 
 ### Pré-requisitos
-* Compilador GCC (MinGW)
-* Make
-* Biblioteca **Allegro 5** instalada (e seus addons: image, font, ttf, primitives).
+* GCC (Compilador C)
+* Make (Para o `Makefile`)
+* Biblioteca Allegro 5 e seus addons (image, font, ttf, primitives) instalados no ambiente (ex: via MSYS2).
 
-### Como Compilar (Windows/MSYS2)
+### Comandos de Execução (Windows/MSYS2)
 
-1.  Navegue até a pasta do projeto:
+1.  **Navegue até a pasta do projeto:**
     ```bash
     cd "caminho/do/projeto"
     ```
 
-2.  Compile o jogo usando o `Makefile`:
+2.  **Compile o executável:**
     ```bash
     make
+    # ou use o alvo específico:
+    # make game
     ```
 
-3.  Execute o jogo:
+3.  **Execute o jogo:**
     ```bash
     ./game.out
     ```
-
-*Para limpar os arquivos compilados:* `make clean`
-
----
-
-## 📂 Estrutura do Projeto
-
-* **`main.c`**: Loop principal, gerenciamento de eventos e máquina de estados.
-* **`renderer.c/.h`**: Responsável por toda a parte visual (desenhar cartas, personagens, textos e imagens).
-* **`logic.c/.h`**: Contém as regras do jogo (dano, turnos, baralho, IA).
-* **`setup.c/.h`**: Funções de inicialização (criar baralho, gerar inimigos aleatórios).
-* **`game_structs.h`**: Definição das estruturas de dados (Player, Enemy, Card).
-* **`constants.h`**: Constantes globais (tamanho da tela, posições).
-* **`Makefile`**: Script de automação de compilação.
-* **Assets**:
-    * `player.png`, `enemy_weak.png`, `enemy_strong.png`: Sprites dos personagens.
-    * `card.png`, `background.png`: Elementos de interface.
-    * `font.ttf`: Fonte personalizada do jogo.
+    *Para apagar os arquivos compilados:* `make clean`
 
 ---
 
-👥 Time
+## 🎮 Guia de Controles
 
-   João Lemos - Projeto & Full-Stack Developer
-   
+| Tecla | Ação |
+| :--- | :--- |
+| **⬅️ / ➡️ Setas** | Navegar entre cartas ou selecionar alvo |
+| **ENTER** | Jogar carta / Confirmar alvo |
+| **ESC** | Cancelar mira / **Encerrar Turno** |
+| **Q** | Sair do jogo |
 
-📞 Support
-email: joaoclemoss@gmail.com
+---
+
+## 👤 Autor e Contato
+
+**Desenvolvedor:** João Lemos
+
+**Função:** Projeto & Full-Stack Developer
+
+**Suporte:** [joaoclemoss@gmail.com](mailto:joaoclemoss@gmail.com)
