@@ -19,6 +19,7 @@ typedef enum {
 #define ID_CURA_INSTANT 6
 #define ID_REGEN_RODADAS 7
 #define ID_SONO 8
+#define CUSTO_X -1  // Custo variável
 
 // --- A CARTA ---
 typedef struct {
@@ -29,16 +30,19 @@ typedef struct {
     int is_vampiric;   
 } Card;
 
+// --- PILHA DE CARTAS ---
 typedef struct {
     Card cartas[50]; 
     int num_cartas;  
 } PilhaCartas;
 
+// --- CRIATURA ---
 typedef struct {
     int hp_atual; 
     int hp_max;   
     int escudo;
     
+    // Status
     int forca;      
     int destreza;   
     int veneno;     
@@ -48,6 +52,7 @@ typedef struct {
     int dormindo;    
 } Creature;
 
+// --- O JOGADOR ---
 typedef struct {
     Creature stats;      
     int energia_atual;   
@@ -59,18 +64,20 @@ typedef struct {
     PilhaCartas pilha_descarte;   
 } Player;
 
-// --- TIPOS DE INIMIGO (ADICIONADO BOSS) ---
+// --- TIPOS DE INIMIGO ---
 typedef enum {
     FRACO,
     FORTE,
-    BOSS  // <--- NOVO TIPO
+    BOSS
 } TipoInimigo;
 
+// --- AÇÃO DA IA ---
 typedef struct {
     TipoCarta tipo_acao; 
     int valor_efeito;    
 } AI_Action;
 
+// --- O INIMIGO ---
 typedef struct {
     Creature stats;      
     TipoInimigo tipo;    
@@ -80,7 +87,9 @@ typedef struct {
     int acao_ia_atual;     
 } Enemy;
 
+// --- ESTADOS DO JOGO (COM MENU) ---
 typedef enum {
+    GAME_STATE_MENU,      // <--- NOVO ESTADO
     GAME_STATE_START,       
     GAME_STATE_NEW_COMBAT,  
     GAME_STATE_PLAYER_TURN, 

@@ -1,11 +1,6 @@
-/*
- * logic.c - VERSÃO CORRIGIDA
- * Inclui constants.h para corrigir o erro de CUSTO_X
- */
-
 #include "logic.h"
 #include "setup.h"
-#include "constants.h" // <--- ESSENCIAL: Corrige o erro 'CUSTO_X undeclared'
+#include "constants.h"
 #include <stdio.h>
 
 void move_card(PilhaCartas* origem, PilhaCartas* destino, int index) {
@@ -33,16 +28,19 @@ void draw_cards(Player* player, int n) {
 }
 
 void apply_turn_start_effects(Creature* c) {
+    // 1. Veneno
     if (c->veneno > 0) {
         c->hp_atual -= c->veneno;
         if (c->hp_atual < 0) c->hp_atual = 0;
         c->veneno--; 
     }
+    // 2. Regen
     if (c->regeneracao > 0) {
         c->hp_atual += 5; 
         if (c->hp_atual > c->hp_max) c->hp_atual = c->hp_max;
         c->regeneracao--;
     }
+    // 3. Contadores
     if (c->vulneravel > 0) c->vulneravel--;
     if (c->fraco > 0) c->fraco--;
     if (c->dormindo > 0) c->dormindo--; 
@@ -87,7 +85,6 @@ int play_card(Player* player, int card_index, Enemy* target) {
         case ATAQUE:
             if (target != NULL) {
                 int dano = calculate_damage(carta.efeito_valor, &player->stats, &target->stats);
-                
                 int dano_vampirico = dano;
 
                 if (target->stats.escudo > 0) {
@@ -106,6 +103,7 @@ int play_card(Player* player, int card_index, Enemy* target) {
                     player->stats.hp_atual += dano_vampirico; 
                     if (player->stats.hp_atual > player->stats.hp_max) 
                         player->stats.hp_atual = player->stats.hp_max;
+                    printf("ROUBO DE VIDA: Recuperou %d HP!\n", dano_vampirico);
                 }
             }
             break;

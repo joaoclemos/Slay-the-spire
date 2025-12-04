@@ -69,17 +69,20 @@ PilhaCartas create_initial_deck() {
     baralho.cartas[i++] = create_random_card(ESPECIAL, 0);
     baralho.cartas[i++] = create_random_card(ESPECIAL, 0);
 
+    // 2 BUFFS
     baralho.cartas[i++] = create_random_card(BUFF, random_int_in_range(1, 2));
     baralho.cartas[i++] = create_random_card(BUFF, random_int_in_range(1, 2));
+
+    // 2 DEBUFFS
     baralho.cartas[i++] = create_random_card(DEBUFF, random_int_in_range(1, 2));
     baralho.cartas[i++] = create_random_card(DEBUFF, random_int_in_range(1, 2));
 
-    // Golpe Vampírico
+    // Golpe Vampírico (Ataque fixo)
     baralho.cartas[i].tipo = ATAQUE;
     baralho.cartas[i].custo_energia = 2;
-    baralho.cartas[i].efeito_valor = 8; 
+    baralho.cartas[i].efeito_valor = 8;
     baralho.cartas[i].magnitude = 0;
-    baralho.cartas[i].is_vampiric = 1; 
+    baralho.cartas[i].is_vampiric = 1;
     i++;
 
     baralho.num_cartas = 20;
@@ -92,6 +95,7 @@ Player setup_player() {
     jogador.stats.hp_atual = 100;
     jogador.stats.hp_max = 100;
     jogador.stats.escudo = 0;
+    
     jogador.stats.forca = 0;
     jogador.stats.destreza = 0;
     jogador.stats.veneno = 0;
@@ -131,7 +135,7 @@ Enemy create_enemy() {
     } else {
         inimigo.tipo = FRACO;
         inimigo.stats.hp_max = random_int_in_range(15, 35);
-        inimigo.num_acoes_ia = 2; 
+        inimigo.num_acoes_ia = random_int_in_range(1, 2); 
     }
 
     for (int i = 0; i < inimigo.num_acoes_ia; i++) {
@@ -153,18 +157,13 @@ Enemy create_enemy() {
     return inimigo;
 }
 
-// --- NOVA FUNÇÃO: CRIA O BOSS ---
 Enemy create_boss() {
     Enemy boss;
     boss.tipo = BOSS;
-    
-    // Stats poderosos
     boss.stats.hp_max = 300; 
     boss.stats.hp_atual = 300;
     boss.stats.escudo = 0;
-    
-    // Zera debuffs
-    boss.stats.forca = 2; // Já começa com força!
+    boss.stats.forca = 2; 
     boss.stats.destreza = 0;
     boss.stats.veneno = 0;
     boss.stats.vulneravel = 0;
@@ -174,15 +173,14 @@ Enemy create_boss() {
 
     boss.num_acoes_ia = 3;
     
-    // Ciclo do Boss: Ataque Pesado -> Defesa -> Ataque Duplo
     boss.ia_ciclo[0].tipo_acao = ATAQUE;
-    boss.ia_ciclo[0].valor_efeito = 20; // Dano alto
+    boss.ia_ciclo[0].valor_efeito = 20; 
     
     boss.ia_ciclo[1].tipo_acao = DEFESA;
-    boss.ia_ciclo[1].valor_efeito = 30; // Defesa alta
+    boss.ia_ciclo[1].valor_efeito = 30; 
     
     boss.ia_ciclo[2].tipo_acao = ATAQUE;
-    boss.ia_ciclo[2].valor_efeito = 25; // Mais dano!
+    boss.ia_ciclo[2].valor_efeito = 25; 
     
     boss.acao_ia_atual = 0;
     return boss;
