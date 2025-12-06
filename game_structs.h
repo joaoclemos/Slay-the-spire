@@ -58,7 +58,7 @@ typedef struct {
 typedef struct {
     Creature stats;      // Herda vida, escudo e status da Creature
     int energia_atual;   // Energia sobrando no turno
-    int energia_max;     // Energia total por turno (geralmente 3)
+    int energia_max;     // Energia total por turno
 
     // As 4 zonas de cartas do jogo
     PilhaCartas baralho_completo; // Todas as cartas do deck

@@ -16,7 +16,7 @@ void move_card(PilhaCartas* origem, PilhaCartas* destino, int index) {
     origem->num_cartas--;
 }
 
-// Compra cartas, reciclando o descarte se acabar
+// dar novas cartas pro jogador quando acaba, reciclando o descarte
 void draw_cards(Player* player, int n) {
     for (int i = 0; i < n; i++) {
         if (player->pilha_compra.num_cartas == 0) {
